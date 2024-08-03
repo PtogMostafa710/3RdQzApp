@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="css/quiz.css" />
+    <link rel="stylesheet" href="css/all.min.css" />
+    <link rel="stylesheet" href="css/normalize.css" />
+
+    <!-- Firebase Fire store SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+    <!-- Firebase Realtime Database SDK (if you want to use it) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"></script>
+  </head>
+  <body>
+    <ul class="create-or-show">
+      <li id="create-ques" class=".create-ques">Create Questions</li>
+      <li class=".ques-show">Show Questions</li>
+    </ul>
+    <section class="create-ques">
+      <div class="register">
+        <input
+          type="text"
+          class="register-substances"
+          placeholder="New Subject-Register"
+        />
+        <button class="submit-substance">Submit</button>
+      </div>
+
+      <div class="quiz-title">
+        <input type="text" class="quiz-name" placeholder="Quiz-lec" />
+      </div>
+
+      <div class="quiz-contents-container-alert">
+        <div class="add-store-content">
+          <button class="add-new">Add New</button>
+          <button class="store-qz">Submit The Lec</button>
+        </div>
+        <div class="quiz-contents-container">
+          <div class="quiz-content">
+            <h3></h3>
+            <header>
+              <input type="text" class="ques" placeholder="Write Valid Ques?" />
+            </header>
+            <div class="section">
+              <ul>
+                <li class="options">
+                  <span class="right-option-select">&#10004;</span>
+                  <input
+                    type="text"
+                    class="option-content"
+                    placeholder="Insert Option"
+                  />
+                </li>
+                <li class="options">
+                  <span class="right-option-select">&#10004;</span>
+                  <input
+                    type="text"
+                    class="option-content"
+                    placeholder="Insert Option"
+                  />
+                </li>
+              </ul>
+              <div class="insert-store-content">
+                <input
+                  type="button"
+                  class="insert-option"
+                  value="Insert Option"
+                />
+                <input
+                  type="button"
+                  class="store-content ds"
+                  value="Add Content"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="alert">
+          you must fill Each question and his options step by step
+        </div>
+      </div>
+    </section>
+    <section class="ques-show">
+      <div class="sd-bar-icon">
+        <i class="fa-regular fa-circle-xmark hd"></i>
+      </div>
+      <div class="slide-bar">
+        <ul class="main-ul"></ul>
+      </div>
+
+      <div class="start">
+        <form action="" class="check" onsubmit="return false">
+          <input
+            type="text"
+            class="check-us-name"
+            placeholder="Enter Valid User Name"
+          />
+          <input type="submit" class="submit" />
+        </form>
+        <div class="controller-buttons"></div>
+        <div class="container"></div>
+      </div>
+    </section>
+    <script
+      type="module"
+      src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"
+    ></script>
+    <script
+      type="module"
+      src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"
+    ></script>
+    <script
+      type="module"
+      src="https://www.gstatic.com/firebasejs/7.7.0/firebase-database.js"
+    ></script>
+
+    <script type="module" src="js/quiz.js"></script>
+  </body>
+</html>
