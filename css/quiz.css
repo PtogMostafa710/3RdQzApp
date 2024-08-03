@@ -66,14 +66,6 @@ section.active {
     flex-direction: column;
 }
 
-/* i {
-    position: absolute;
-    left: 4px;
-    top: 4px;
-    font-size: 50px;
-    color: var(--main-color);
-} */
-
 .create-or-show {
     background-color: var(--put-color);
     box-shadow: var(--box-shadow-alt);
@@ -753,21 +745,6 @@ section.active {
 }
 
 /* End Quiz Area */
-
-.quiz-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    background-color: white;
-    box-shadow: 0px 0px 20px #ddd;
-    padding: 5px;
-    border-radius: 10px;
-    transition: .5s;
-    overflow: auto;
-    height: 40px;
-    position: relative;
-}
-
 .timer {
     font-size: 20px;
     font-weight: bold;
@@ -838,8 +815,8 @@ button.stop-qz{
 }
 
 
-/* table */
 
+/* table */
 table {
     width: 99%;
     border-collapse: collapse;
