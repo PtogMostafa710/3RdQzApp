@@ -73,7 +73,6 @@ let set_interval, startTime, endTime;
 let duration = 10;
 let txtArray = {};
 let substancesRegister = [];
-let recentArray = [];
 let create_or_show_height = create_or_show.getBoundingClientRect().height
 let sldHgh;
 let teamCode = '2027'
@@ -1327,6 +1326,7 @@ function showRanking() {
     // Define the desired property order
     const propertyOrder = ["usName", "elapsed",  "true-answers"];
 
+    let recentArray = [];
     let recentEdit;
     for (const n in present_elapsedInfo) {
         reorderProperties(present_elapsedInfo[n], propertyOrder)                
