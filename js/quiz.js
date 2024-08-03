@@ -1242,7 +1242,7 @@ function putElapsedTme(elapsed, li, txtArray, number_trueAnswers, objLength) {
         let lec_student = txtArray[filter_nestedLiContent];
 
         lec_student.forEach(function(obj) {
-            if(txt.value === obj['usName']) {
+            if(txt.value.toLowerCase() === obj['usName']) {
                 if(!obj['elapsed']) {
                     //Get the latest elapsed tm
                     let secondsTm = Math.round(elapsed / 1000)
