@@ -832,13 +832,6 @@ function subUsName() {
     let lists = document.querySelectorAll('.sub-name')
     let filterLi = Array.from(lists).filter(l => l.classList.contains('active')).map(l => l.firstElementChild.firstElementChild.textContent).join("")
     
-    // Array.from(lists).filter(l => !l.classList.contains('active')).map(l => {
-    //     l.addEventListener('click', function() {
-    //         if(document.querySelector('table') ) {
-    //             document.querySelector('table').remove();
-    //         }
-    //     })
-    // })
     getDoc(doc(db, "substances", 'subjects')).then(async e=>{
         if(e.data()[filterLi]) {
             txtArray = e.data()[filterLi];
@@ -860,7 +853,7 @@ function subUsName() {
                 Object.keys(txtArray).forEach(function(ele) {
                     if(ele === filter_nestedLiContent) {
                         txtArray[`${filter_nestedLiContent}`].push({
-                            usName: txt.value
+                            usName: txt.value.toLowerCase()
                         })
                         
                         let except = txtArray[`${filter_nestedLiContent}`].filter((_, n,arr) => {
