@@ -513,7 +513,6 @@ section.active {
 
     .ques-show {
         margin-top: 50px;
-        display: flex;
         justify-content: space-around;
         align-items: center;
         height: 100vh;
