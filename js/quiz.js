@@ -73,6 +73,7 @@ let set_interval, startTime, endTime;
 let duration = 10;
 let txtArray = {};
 let substancesRegister = [];
+let recentArray = [];
 let create_or_show_height = create_or_show.getBoundingClientRect().height
 let sldHgh;
 let teamCode = '2027'
@@ -515,22 +516,22 @@ function addNewQues() {
             </header>
             <div class="section">
                 <ul>
-                <li class="options">
-                    <span class="right-option-select">&#10004;</span>
-                    <input
-                    type="text"
-                    class="option-content"
-                    placeholder="Insert Option"
-                    />
-                </li>
-                <li class="options">
-                    <span class="right-option-select">&#10004;</span>
-                    <input
-                    type="text"
-                    class="option-content"
-                    placeholder="Insert Option"
-                    />
-                </li>
+                    <li class="options">
+                        <span class="right-option-select">&#10004;</span>
+                        <input
+                        type="text"
+                        class="option-content"
+                        placeholder="Insert Option"
+                        />
+                    </li>
+                    <li class="options">
+                        <span class="right-option-select">&#10004;</span>
+                        <input
+                        type="text"
+                        class="option-content"
+                        placeholder="Insert Option"
+                        />
+                    </li>
                 </ul>
                 <div class="insert-store-content">
                 <input type="button" class="insert-option" value="Insert Option"/>
@@ -832,14 +833,13 @@ function subUsName() {
     let lists = document.querySelectorAll('.sub-name')
     let filterLi = Array.from(lists).filter(l => l.classList.contains('active')).map(l => l.firstElementChild.firstElementChild.textContent).join("")
     
-    Array.from(lists).filter(l => !l.classList.contains('active')).map(l => {
-        l.addEventListener('click', function() {
-            if(document.querySelector('table') ) {
-                document.querySelector('table').remove();
-            }
-        })
-        
-    })
+    // Array.from(lists).filter(l => !l.classList.contains('active')).map(l => {
+    //     l.addEventListener('click', function() {
+    //         if(document.querySelector('table') ) {
+    //             document.querySelector('table').remove();
+    //         }
+    //     })
+    // })
     getDoc(doc(db, "substances", 'subjects')).then(async e=>{
         if(e.data()[filterLi]) {
             txtArray = e.data()[filterLi];
@@ -898,7 +898,7 @@ function subUsName() {
     startBtn.textContent = 'Start Quiz'
     startBtn.className = 'startQz hd'
     
-    //create start btn
+    //create stop btn
     let endBtn = document.createElement('button')
     endBtn.textContent = 'Stop Quiz'
     endBtn.className = 'stop-qz hd'
@@ -1327,7 +1327,6 @@ function showRanking() {
     // Define the desired property order
     const propertyOrder = ["usName", "elapsed",  "true-answers"];
 
-    let recentArray = []
     let recentEdit;
     for (const n in present_elapsedInfo) {
         reorderProperties(present_elapsedInfo[n], propertyOrder)                
