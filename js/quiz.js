@@ -1133,7 +1133,7 @@ function mainCountDown(duration, quizArea, length) {
                     let filter_true_number = true_calc.textContent.split(" ").map(e => +e ).filter(e => +e).join('')
                     let lists = document.querySelectorAll(".sub-name")
                     Array.from(lists).filter(l => l.classList.contains('active')).map(l => {
-                        putElapsedTme(elapsed, l, txtArray, filter_true_number)
+                        putElapsedTme(elapsed, l, txtArray, filter_true_number, length)
                     })
                 }
         } 
