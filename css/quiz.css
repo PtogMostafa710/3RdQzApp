@@ -520,8 +520,11 @@ section.active {
     }
 
     .ques-show {
-        margin-top: 55px;
+        margin-top: 50px;
+        display: flex;
+        justify-content: space-around;
         align-items: center;
+        height: 100vh;
     }
     .slide-bar {
         padding: 5px 10px 0px;
@@ -533,13 +536,7 @@ section.active {
         transform: translateX(0);
         z-index: 100;
     }
-    .start {
-        position: absolute;
-        top: 60%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
+    
     .slide-bar.inactive {
         transform: translateX(-800%);
     }
@@ -846,10 +843,7 @@ button.stop-qz{
 table {
     width: 99%;
     border-collapse: collapse;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    margin-top: 50%;
 }
 
 th, td {
