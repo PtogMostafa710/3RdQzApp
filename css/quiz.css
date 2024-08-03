@@ -512,10 +512,10 @@ section.active {
     }
 
     .ques-show {
-        margin-top: 50px;
+        margin-top: 50%;
         justify-content: space-around;
         align-items: center;
-        height: 100vh;
+        height: 50vh;
     }
     .slide-bar {
         padding: 5px 10px 0px;
@@ -819,7 +819,6 @@ button.stop-qz{
 table {
     width: 99%;
     border-collapse: collapse;
-    margin-top: 50%;
 }
 
 th, td {
