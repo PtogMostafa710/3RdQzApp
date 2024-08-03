@@ -1131,7 +1131,7 @@ function mainCountDown(duration, quizArea, length) {
 
                     let true_calc = document.querySelector(".result-calc .true-calc") 
                     let filter_true_number = true_calc.textContent.split(" ").map(e => +e ).filter(e => +e).join('')
-                    let lists = document.querySelector(".sub-name")
+                    let lists = document.querySelectorAll(".sub-name")
                     Array.from(lists).filter(l => l.classList.contains('active')).map(l => {
                         putElapsedTme(elapsed, l, txtArray, filter_true_number)
                     })
