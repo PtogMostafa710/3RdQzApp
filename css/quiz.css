@@ -376,13 +376,12 @@ section.active {
     justify-content: space-around;
     transform: scale(0);
     transition: .8s;
-    margin: 0 auto;
 }
 
 .check.active {
     transform: scale(1);
     display: flex;
-    width: 90%;
+    width: 80%;
     position: relative;
     margin-bottom: 20px;
     align-items: center;
