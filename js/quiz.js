@@ -38,6 +38,12 @@ const storage = firebase.storage();
 
 //Elements
 let container = document.querySelector(".container"),
+    alerts = document.querySelector(".alerts"),
+    reEmail = document.querySelector(".email"),
+    valid = document.querySelector(".valid"),
+    codeValidation = document.querySelector(".rx-code"),
+    code_check = document.querySelector(".check-code"),
+    submit_form = document.querySelector(".submit-form"),
     slide_bar = document.querySelector(".slide-bar"),
     slide_bar_ul = document.querySelector(".slide-bar ul"),
     check = document.querySelector(".check"),
@@ -52,6 +58,7 @@ let container = document.querySelector(".container"),
     submit_substance = document.querySelector('.submit-substance'),
     qz_lec = document.querySelector('.quiz-name'),
     qz_contents_container = document.querySelector('.quiz-contents-container'),
+    add_store_content = document.querySelector('.add-store-content'),
     qz_content = document.querySelector('.quiz-content'),
     qz_content_ques = document.querySelector('.quiz-content .ques'),
     qz_content_option = document.querySelectorAll('.quiz-content .option-content'),
@@ -73,12 +80,167 @@ let set_interval, startTime, endTime;
 let duration = 10;
 let txtArray = {};
 let substancesRegister = [];
-let create_or_show_height = create_or_show.getBoundingClientRect().height
 let sldHgh;
 let teamCode = '2027'
 let storedData;
+let userState = '';
+let userEmails = [];
+let storedUsers;
+
+let create_or_show_height = create_or_show.getBoundingClientRect().height
 create_qz.style.top =  `${create_or_show_height + 30}px`
 slide_bar.style.top =  `${create_or_show_height + 1}px`
+
+//show alerts fn
+function showAlerts(message, status) {
+    alerts.innerHTML 
+    =   `
+        <div class="alert alert-${status}" role="alert">
+            ${message}
+        </div>
+        `
+    setTimeout(() => {
+        alerts.innerHTML = ``   
+    }, 5000);
+}
+
+function validateEmail(email) {
+    const regex = /^[^\s@]+@(gmail|Gmail|yahho)\.com$/;
+    return regex.test(email);
+}
+
+// let emailFound = false
+// // for payed process
+
+// // const docRefUsers = doc(db, "userRegister", "usersEmails");
+// // register.addEventListener('click', async function() {
+
+// //     register.innerHTML = loadingAction()
+// //     if (validateEmail(reEmail.value)) {
+// //         const docSnap = await getDoc(docRefUsers);
+// //         if(docSnap.exists()) {
+// //             //Normal updated
+// //             getDoc(docRefUsers).then(async e=>{
+// //                 storedUsers = await e.data().users
+// //                 storedUsers.push({})
+
+// //                 storedUsers.forEach(async function(storeObject) {
+// //                     if(storeObject.userEmail === reEmail.value) {
+// //                         emailFound = true
+
+// //                         if(storeObject.subscribed) {
+// //                             resultOfAuth()
+// //                         }
+
+// //                         return await updateDoc(docRefUsers, {
+// //                             users: arrayUnion({...storeObject, subscribed: storeObject.subscribed})
+// //                         })
+// //                     } 
+                    
+// //                     if(!emailFound) {
+// //                         return await updateDoc(docRefUsers, {
+// //                             users: arrayUnion({userEmail: reEmail.value, subscribed: codeValidation.value === teamCode ? true : false, status: codeValidation.value === teamCode ? 'Rx-User' : "User"})
+// //                         })
+// //                     } 
+// //                     localStorage.setItem('subscribed-user-email', JSON.stringify(storedUsers))
+// //                 })
+// //             })
+// //         }     
+// //     } else {
+// //         showAlerts('Invalid Email', 'danger');
+// //     }  
+
+// //     closeModal.click();
+// //     register.innerHTML = 'Register'
+
+// // })
+
+// // function resultOfAuth() {
+
+// //     log_register.remove();
+
+// //     if(codeValidation.value == teamCode) {
+// //         create_or_show.style.display = 'none'
+// //         slide_bar.parentElement.style.display = 'flex'
+// //         slide_bar.style.top = '1px';
+// //         i.style.top = '1px'
+
+// //  
+// //     } else {
+// //         create_or_show.style.display = 'none'
+// //         qzShow.style.display = 'block'
+        
+// //         i.parentElement.style.top =  `2%`
+// //         slide_bar.style.top =  `1px`
+// //     }
+// // }
+
+// // if(localStorage.getItem('subscribed-user-email')) {
+// //     resultOfAuth()
+// // }
+
+reEmail.addEventListener('input', function(event) {
+    if(event.data !== " ") {
+        if(validateEmail(event.target.value)) {
+            submit_form.classList.remove('ds')
+        } else {
+            submit_form.classList.add('ds')
+        }
+    }
+})
+
+code_check.addEventListener('change', function() {
+    code_check.checked ? codeValidation.classList.remove('ds') :  codeValidation.classList.add('ds');
+})
+
+function user_register(e) {
+    e.preventDefault();
+    
+    if(!code_check.checked) {
+        userState = 'user'
+        user();
+    } else {
+        if(codeValidation.value == teamCode) {
+            userState = 'Rx-user'
+            rx_user();
+        } else {
+            showAlerts('Enter Right Rx Code Or Cancel The Check Of CheckBox', 'danger')
+        }
+    }
+
+    localStorage.setItem('user-status', JSON.stringify({email: reEmail.value, status: userState}));
+}
+
+submit_form.onclick = user_register;
+
+function user() {
+    create_or_show.style.display = 'none'
+    qzShow.style.cssText = 'margin:0; display:block;'
+    slide_bar.style.cssText = 'top:1px; border-top: var(--put-color) 2px solid;'
+    i.parentElement.style.cssText = 'color: var(--body-color); top: 2%;'
+    valid.remove();
+
+    userState = 'user';
+
+}
+
+function rx_user() {
+    create_or_show.style.display = 'flex';
+    let create_or_show_height = create_or_show.getBoundingClientRect().height
+    create_qz.style.top =  `${create_or_show_height + 30}px`
+    slide_bar.style.top =  `${create_or_show_height + 1}px`
+    valid.remove();
+    userState = 'Rx-user';
+}
+
+if(localStorage.getItem('user-status')) {
+    const userInfo = JSON.parse(localStorage.getItem('user-status'))
+    if(userInfo.status == 'user') {
+        user()
+    } else {
+        rx_user();
+    }
+}
 
 i.addEventListener('click', function() {
     let table = document.querySelector('table')
@@ -95,21 +257,25 @@ i.addEventListener('click', function() {
 })
 
 function disableFn() {
-    qz_content.classList.add('ds')
-    qz_content.parentElement.previousElementSibling.classList.add('ds')
-    qz_content_ques.disabled = true;
-    qz_content_option.forEach(function(option) {
-        option.disabled = true
-    });
+    if(qz_content) {
+        qz_content.classList.add('ds')
+        add_store_content.classList.add('ds')
+        qz_content_ques.disabled = true;
+        qz_content_option.forEach(function(option) {
+            option.disabled = true
+        });
+    }
 }
 
 function non_disableFn() {
-    qz_content.classList.remove('ds')
-    qz_content.parentElement.previousElementSibling.classList.remove('ds')
-    qz_content_ques.disabled = false;
-    qz_content_option.forEach(function(option) {
-        option.disabled = false
-    });
+    if(qz_content) {
+        qz_content.classList.remove('ds')
+        add_store_content.classList.remove('ds')
+        qz_content_ques.disabled = false;
+        qz_content_option.forEach(function(option) {
+            option.disabled = false
+        });
+    }
 }
 
 create_or_show_lis.forEach(li => {
@@ -123,6 +289,9 @@ create_or_show_lis.forEach(li => {
 
         if(li.textContent === 'Create Questions') {
             disableFn();
+            if(localStorage.getItem('substances')) {
+                qz_content.classList.remove('ds')
+            }
             container.innerHTML = '';
             container.classList.remove('start-qz')
             container.previousElementSibling.innerHTML = ''
@@ -132,7 +301,6 @@ create_or_show_lis.forEach(li => {
         }
     })
 })
-
 
 const docRef = doc(db, "substances", "subjects");
 submit_substance.addEventListener('click', async () => {
@@ -211,13 +379,11 @@ submit_substance.addEventListener('click', async () => {
     register_substances.value = '';
 })
 
-
 // Register Substances
 getDoc(doc(db, "substances", 'subjects')).then(e=>{
     storedData = e.data().substances
     substancesRegister = storedData
     if(substancesRegister.length > 0) {
-        console.log(substancesRegister)
         substancesRegister.forEach(async function(sub, i) {
             showList()
             let subLi_contents = document.querySelectorAll('.sub-name .content-parent')
@@ -462,6 +628,7 @@ function addLec() {
                                 `    
                                 // <span><i class="fa-solid fa-trash trash"></i></span>
                             })
+
                             await updateDoc(docRef, {
                                 substances: substancesRegister
                             })
@@ -506,8 +673,10 @@ function selectRtLec() {
 }
 
 function addNewQues() {
+    
     let newQz_content = document.createElement('div')
     newQz_content.className = 'quiz-content';
+    
     newQz_content.innerHTML = `
         <h3></h3>
             <header>
@@ -539,7 +708,6 @@ function addNewQues() {
             </div>
     `;
     qz_contents_container.appendChild(newQz_content);
-
     let store = document.querySelectorAll('.create-ques .store-content')
     
     //apply the action on other questions
@@ -553,24 +721,9 @@ function addNewQues() {
         clickToStore(s)
     })
 
-    //apply the action on other questions
-    let insert_options = document.querySelectorAll('.create-ques .insert-option')
-    let insOption = Array.from(insert_options).filter((_, index) => {
-        return index > 0 
-    })
-    
-    //insert questions
-    insOption.forEach(insert => {
-        insert.addEventListener('click', function() {
-            insert_options.forEach(o => o.classList.remove('active'))
-            insert.classList.add('active')
-            
-            if(insert.classList.contains('active')) {
-                insertOption(insert)
-            }
-        })
-    })
-    
+    // Only add the event listener to the newly created insert-option button
+    let newInsertOption = newQz_content.querySelector('.insert-option');
+    newInsertOption.addEventListener('click', () => insertOption(newInsertOption)); // Ensure this function also doesn’t add duplicate listeners);
 }
 
 addNew.classList.add('ds')
@@ -625,12 +778,11 @@ function insertOption(insert) {
         }
     })
 
-    addNew.classList.add('ds')
-    store_qz.classList.add('ds')
     insert.nextElementSibling.value = 'Add Content';
     insert.nextElementSibling.classList.add('ds')
-    let option_select = insert.parentElement.previousElementSibling.querySelectorAll('.option-content')
-
+    
+    let option_select = insert.parentElement.previousElementSibling.querySelectorAll('.option-content');
+    
     let test = Array.from(option_select).every(function(option) {
         // Assuming the last element child of each option is the input you want to check
         // let input = option.lastElementChild;
@@ -638,7 +790,7 @@ function insertOption(insert) {
     })
     insert.classList.add('ds')
     let rt_select = insert.parentElement.previousElementSibling.querySelectorAll('.right-option-select')
-    rt_select.forEach(rt => rt.classList.remove('true-select'))
+    // rt_select.forEach(rt => rt.classList.remove('true-select'))
     
     option_select.forEach(function(option, o) {
         if(!test) {
@@ -647,14 +799,15 @@ function insertOption(insert) {
 
         if(o === option_select.length - 1) {
             option.addEventListener('input', function(event) {
-                if(event.data !== " " && event.inputType === 'insertText') {
+
+                if(event.data !== " ") {
                     rt_select.forEach(rt => rt.classList.remove('ds'))
                     insert.classList.remove('ds')
+                    insert.nextElementSibling.classList.remove('ds')
                 }
             })
         }
     })
-    
 }; 
 
 // //Action of insertion for the First Default Option
@@ -667,7 +820,6 @@ function clickToStore(store) {
     let options = [...store.parentElement.previousElementSibling.children]
     options.forEach(main_option => {
         let select_rt_answer = main_option.firstElementChild;
-
         //Try To Replace The Action Fn of StoreBtn With select_rt_answer
         select_rt_answer.addEventListener("click", function() {
             if(select_rt_answer.nextElementSibling.value !== '') {
@@ -676,9 +828,8 @@ function clickToStore(store) {
         });
 
         //check after application
-        store.addEventListener('click', async function() {
+        store.addEventListener('click', function() {
             let quesValue = store.parentElement.parentElement.previousElementSibling.firstElementChild.value;
-                
             //check for if any value is'nt available;
             if(main_option.lastElementChild.value === '') {
                 store.classList.remove('non-disabled')
@@ -701,17 +852,11 @@ function clickToStore(store) {
                         
                         add_and_Store_quesAnswer(lecName)
                         store.value = 'Content Added'
-                        await updateDoc(docRef, {
-                            substances: substancesRegister
-                        })
-
-                        console.log(substancesRegister)
                     }
             }
         })
     })
 }
-
 // //add qz-content to array & local storage
 function add_and_Store_quesAnswer(lec) {
     let storeContent = document.querySelectorAll('.store-content')
@@ -727,7 +872,11 @@ function add_and_Store_quesAnswer(lec) {
                         if(qzContents.length > 1) {
                             store_qz.disabled = false
                             store_qz.classList.remove('ds')
-                            store_qz.addEventListener('click', function() {
+                            store_qz.addEventListener('click', async function() {
+                                await updateDoc(docRef, {
+                                    substances: substancesRegister
+                                })
+                                
                                 create_or_show.lastElementChild.classList.remove('ds')
                                 disableFn()
 
@@ -761,7 +910,6 @@ function add_and_Store_quesAnswer(lec) {
                                 qz_content.lastElementChild.firstElementChild.innerHTML = '';
                                 
                                 setTimeout(() => {
-                                    console.log(qz_content.lastElementChild.firstElementChild)
                                     opSpliceArray.forEach(function(e) {
                                         qz_content.lastElementChild.firstElementChild.appendChild(e);
                                     })
@@ -772,19 +920,20 @@ function add_and_Store_quesAnswer(lec) {
 
                             //Get the array from option lists to reset the number of option as ==> (2)option
                         }
+                        
                         sub[`${key}`].push({})
-
                         //put the content in the equal indexes
                         sub[`${key}`].forEach((_, oIndex,sArray) => {
                             if(oIndex === storeIndex) {
                                 sArray[oIndex][`quesContent`] = ques.value;
-                                options.forEach((option, i) => {
+                                sArray[oIndex][`answers`] = {}
+                                options.map((option, i) => {
                                     let rt_answer = option.firstElementChild
                                     let input = option.lastElementChild
-                                    if(!sArray[oIndex][`answer-${i+1}`]) {
-                                        sArray[oIndex][`answer-${i+1}`] = input.value;
-                                    }
-                                    
+
+                                    // sArray[oIndex][`answer-${answerNumber+1}`] = input.value;
+                                    sArray[oIndex][`answers`][`answer-${i+1}`] = input.value
+
                                     if(rt_answer.classList.contains('true-select')) {
                                         sArray[oIndex][`rt-answer`] = rt_answer.nextElementSibling.value;
                                     } 
@@ -806,6 +955,7 @@ function add_and_Store_quesAnswer(lec) {
             })
         }
     })
+
 }
 
 // //for team that create the qz
@@ -816,8 +966,7 @@ function trueSelection(select_rt_answer, options) {
     select_rt_answer.parentElement.parentElement.nextElementSibling.lastElementChild.classList.remove('ds')
 }
 
-
-// // register user-name and start the qz
+// register user-name and start the qz
 function subUsName() {
     //put the txtArray[`${nested.textContent}`] = [] to start register the userNames 
     let nested_lists = document.querySelectorAll('.lec-name')
@@ -836,13 +985,14 @@ function subUsName() {
         if(e.data()[filterLi]) {
             txtArray = e.data()[filterLi];
         }
-        check.addEventListener("submit", () => {
-            let filter_nestedLiContent = Array.from(nested_lists).filter(l => l.classList.contains('selected-lec')).map(l => l.firstElementChild.textContent).join("");
-            if(!txtArray[filter_nestedLiContent]) {
-                txtArray[filter_nestedLiContent] = []
-            }
-
+        
+        let filter_nestedLiContent = Array.from(nested_lists).filter(l => l.classList.contains('selected-lec')).map(l => l.firstElementChild.textContent).join("");
+        function log_username_dyn() {
             if(txt.value.trim().split(" ").length >= 2) {
+                if(!localStorage.getItem('username')) {
+                    localStorage.setItem('username', txt.value);
+                }
+                
                 startBtn.classList.remove('hd')
                 endBtn.classList.remove('hd')
                 //Compare the updated length of array and the stored array
@@ -883,7 +1033,19 @@ function subUsName() {
                     txt.placeholder = 'Wrong Team Code'
                 }
             }
+        }
+
+        if(localStorage.getItem('username')) txt.value = localStorage.getItem('username'); txt.classList.add("ds"); 
+        
+        check.addEventListener("submit", () => {
+            if(!txtArray[filter_nestedLiContent]) {
+                txtArray[filter_nestedLiContent] = []
+                
+            }
+
+            log_username_dyn();
         })
+        
     })
     //create start btn
     let startBtn = document.createElement('button')
@@ -988,7 +1150,9 @@ function pageContent(content, length) {
         const answers = document.createElement("div")
         answers.className = `answers`;
 
-        for(let i = 1; i <= 4; i++) {
+        
+        const answersObject = content[index][`answers`]
+        for(let i = 1; i <= Object.keys(answersObject).length; i++) {
             const answer = document.createElement("div")
             answer.className = `answer`
             
@@ -997,7 +1161,8 @@ function pageContent(content, length) {
             
             let answerVal = document.createElement("div")
             answerVal.className = 'answer-val';
-            answerVal.textContent += `${content[index][`answer-${i}`]}`;
+            answerVal.textContent += `${answersObject[`answer-${i}`]}`;
+            
             answerVal.setAttribute("rt-answer", content[index][`rt-answer`].trim())
 
             answer.appendChild(circle)
@@ -1098,44 +1263,44 @@ function mainCountDown(duration, quizArea, length) {
             mt--;
             dwn(sc, seconds, mt, minutes)
         } else if(sc === 0 && mt === 0) {
-                dwn(sc, seconds, mt, minutes)
-                clearInterval(set_interval);
-                [...quizArea.children[1].children].forEach(chl => {
-                    if(chl.children[1].getAttribute("rt-answer") === chl.children[1].textContent) {
-                        chl.classList.add('mss')
-                        chl.firstElementChild.style.cssText = 'border: 2px solid #c621f3bf; background-color: #c621f3bf;'
-                        let true_false_answer = document.createElement("span")                    
-                        true_false_answer.innerHTML = "&#10004;"
-                        chl.appendChild(true_false_answer)
-                    } 
-                    timer.innerHTML = `Final Result is <span>${chl.children[1].getAttribute("rt-answer")}</span>` 
-                    timer.style.cssText = 'font-size:15px;'
-                });
+            dwn(sc, seconds, mt, minutes)
+            clearInterval(set_interval);
+            [...quizArea.children[1].children].forEach(chl => {
+            if(chl.children[1].getAttribute("rt-answer") === chl.children[1].textContent) {
+                chl.classList.add('mss')
+                chl.firstElementChild.style.cssText = 'border: 2px solid #c621f3bf; background-color: #c621f3bf;'
+                let true_false_answer = document.createElement("span")                    
+                true_false_answer.innerHTML = "&#10004;"
+                chl.appendChild(true_false_answer)
+            } 
+            timer.innerHTML = `Final Result is <span>${chl.children[1].getAttribute("rt-answer")}</span>` 
+            timer.style.cssText = 'font-size:15px;'
+            });
 
-                [...quizArea.children[1].children].filter(chl => {
-                    return chl.children[1].getAttribute("rt-answer") !== chl.children[1].textContent
-                }).map(chl => chl.classList.add('finished-ques'))
+            [...quizArea.children[1].children].filter(chl => {
+                return chl.children[1].getAttribute("rt-answer") !== chl.children[1].textContent
+            }).map(chl => chl.classList.add('finished-ques'))
 
-                //Muse increase
-                currentIndex++;
-                if(currentIndex < length) {
-                    quizArea.parentElement.nextElementSibling.style.display = 'block'
-                    setTimeout(() => {
-                        quizArea.parentElement.nextElementSibling.classList.add("active") 
-                        mainCountDown(duration, quizArea.parentElement.nextElementSibling.children[1], length) 
-                    },70)
-                } else {
-                    endTime = Date.now()
-                    let elapsed = endTime - startTime;
-                    createRanking(length)
+            //Muse increase
+            currentIndex++;
+            if(currentIndex < length) {
+                quizArea.parentElement.nextElementSibling.style.display = 'block'
+                setTimeout(() => {
+                    quizArea.parentElement.nextElementSibling.classList.add("active") 
+                    mainCountDown(duration, quizArea.parentElement.nextElementSibling.children[1], length) 
+                },70)
+            } else {
+                endTime = Date.now()
+                let elapsed = endTime - startTime;
+                createRanking(length)
 
-                    let true_calc = document.querySelector(".result-calc .true-calc") 
-                    let filter_true_number = true_calc.textContent.split(" ").map(e => +e ).filter(e => +e).join('')
-                    let lists = document.querySelectorAll(".sub-name")
-                    Array.from(lists).filter(l => l.classList.contains('active')).map(l => {
-                        putElapsedTme(elapsed, l, txtArray, filter_true_number, length)
-                    })
-                }
+                let true_calc = document.querySelector(".result-calc .true-calc") 
+                let filter_true_number = true_calc.textContent.split(" ").map(e => +e ).filter(e => +e).join('')
+                let lists = document.querySelectorAll(".sub-name")
+                Array.from(lists).filter(l => l.classList.contains('active')).map(l => {
+                    putElapsedTme(elapsed, l, txtArray, filter_true_number, length)
+                })
+            }
         } 
     }, 1000)    
     // seconds.textContent = sc ? sc >= 10 : `0${sc} ? i don't Know why this is not valid`
@@ -1235,6 +1400,7 @@ function createRanking(length) {
     container.appendChild(result_calc) 
 };
 
+
 // //put the ranking and the time elapsed
 function putElapsedTme(elapsed, li, txtArray, number_trueAnswers, objLength) {
     let filter_nestedLiContent = Array.from(li.lastElementChild.children).filter(l => l.classList.contains('selected-lec')).map(l => l.firstElementChild.textContent).join("")
@@ -1312,7 +1478,6 @@ function showRanking() {
                 orderedObj[key] = obj[key];
             }
         }
-        // console.log(orderedObj)
         return orderedObj;
     }
     
@@ -1351,3 +1516,4 @@ function showRanking() {
 
     table.classList.remove('hd')
 };
+
