@@ -929,6 +929,7 @@ section.active {
 .show-table {
     display: block;
     margin: 0 auto;
+    width: 90%;
 }
 
 button.startQz,
