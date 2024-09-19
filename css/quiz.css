@@ -376,6 +376,7 @@ section.active {
     justify-content: space-around;
     transform: scale(0);
     transition: .8s;
+    margin: 0 auto;
 }
 
 .check.active {
@@ -630,6 +631,7 @@ section.active {
         top: 60%;
         left: 50%;
         transform: translate(-50%, -50%);
+        width: 90%;
     }
 
     .slide-bar.inactive {
@@ -901,6 +903,10 @@ section.active {
 
 .result-calc.active {
     transform: rotateX(0);
+}
+
+.result-calc h3 {
+    font-size: 19px;
 }
 
 .result-calc .true-calc {
