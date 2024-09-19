@@ -1001,7 +1001,9 @@ function subUsName() {
                 }
     
                 Object.keys(txtArray).forEach(function(ele) {
+
                     if(ele === filter_nestedLiContent) {
+
                         txtArray[`${filter_nestedLiContent}`].push({
                             usName: txt.value.toLowerCase()
                         })
@@ -1035,17 +1037,16 @@ function subUsName() {
             }
         }
 
-        if(localStorage.getItem('username')) txt.value = localStorage.getItem('username'); txt.classList.add("ds"); 
+        if(localStorage.getItem('username')) {
+            txt.value = localStorage.getItem('username');
+            txt.classList.add('ds')
+            check.lastElementChild.style.display = 'none'
+            log_username_dyn();
+        }  
         
         check.addEventListener("submit", () => {
-            if(!txtArray[filter_nestedLiContent]) {
-                txtArray[filter_nestedLiContent] = []
-                
-            }
-
             log_username_dyn();
         })
-        
     })
     //create start btn
     let startBtn = document.createElement('button')
@@ -1060,7 +1061,6 @@ function subUsName() {
     controlled_btn.appendChild(startBtn)
     controlled_btn.appendChild(endBtn)
     
-    // check.firstElementChild.onfocus = () => controlled_btn.innerHTML = '';
     startBtn.addEventListener('click', function() {
         let filterLi = Array.from(lists).filter(l => l.classList.contains('active')).map(l => l.firstElementChild.firstElementChild.textContent).join("")
         clearInterval(set_interval)
@@ -1516,4 +1516,3 @@ function showRanking() {
 
     table.classList.remove('hd')
 };
-
