@@ -381,7 +381,7 @@ section.active {
 .check.active {
     transform: scale(1);
     display: flex;
-    width: 70%;
+    width: 90%;
     position: relative;
     margin: 0 auto;
     margin-bottom: 20px;
@@ -630,7 +630,7 @@ section.active {
         position: absolute;
         top: 60%;
         transform: translateY(-50%);
-        width: 70%;
+        width: 100%;
     }
 
     .slide-bar.inactive {
