@@ -381,8 +381,9 @@ section.active {
 .check.active {
     transform: scale(1);
     display: flex;
-    width: 80%;
+    width: 70%;
     position: relative;
+    margin: 0 auto;
     margin-bottom: 20px;
     align-items: center;
 }
@@ -628,9 +629,8 @@ section.active {
     .start {
         position: absolute;
         top: 60%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90%;
+        transform: translateY(-50%);
+        width: 70%;
     }
 
     .slide-bar.inactive {
