@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz App</title>
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
     <link rel="stylesheet" href="css/quiz.css" />
     <link rel="stylesheet" href="css/all.min.css" />
     <link rel="stylesheet" href="css/normalize.css" />
@@ -12,8 +16,56 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
     <!-- Firebase Realtime Database SDK (if you want to use it) -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"></script>
+    <!-- BootStrap Script -->
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   </head>
   <body>
+    <div class="snow-wrap">
+      <div class="snow"></div>
+    </div>
+
+    <!-- Register Modal -->
+    <form class="valid">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <input
+          type="email"
+          class="form-control email"
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Enter You Email"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Rx Code</label>
+        <input
+          type="number"
+          class="form-control ds rx-code"
+          id="exampleInputPassword1"
+          placeholder="Rx Code"
+          required
+        />
+      </div>
+      <div class="mb-3 form-check">
+        <input
+          type="checkbox"
+          class="form-check-input check-code"
+          id="exampleCheck1"
+        />
+        <label class="form-check-label" for="exampleCheck1">Check me</label>
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary submit-log-form w-100 submit-form ds"
+      >
+        Submit
+      </button>
+    </form>
+    <!-- //Register Modal// -->
+
+    <!-- Alerts -->
+    <div class="alerts"></div>
+
     <ul class="create-or-show">
       <li id="create-ques" class=".create-ques">Create Questions</li>
       <li class=".ques-show">Show Questions</li>
@@ -115,7 +167,6 @@
       type="module"
       src="https://www.gstatic.com/firebasejs/7.7.0/firebase-database.js"
     ></script>
-
     <script type="module" src="js/quiz.js"></script>
   </body>
 </html>
