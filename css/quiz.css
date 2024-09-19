@@ -926,6 +926,11 @@ section.active {
     margin-bottom: 20px;
 }
 
+.show-table {
+    display: block;
+    margin: 0 auto;
+}
+
 button.startQz,
 button.stop-qz{
     background: white;
