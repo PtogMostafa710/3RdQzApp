@@ -48,6 +48,7 @@ let container = document.querySelector(".container"),
     slide_bar_ul = document.querySelector(".slide-bar ul"),
     check = document.querySelector(".check"),
     controlled_btn = document.querySelector(".controller-buttons"),
+    showTable = document.querySelector(".showTable"),
     txt = document.querySelector(".check-us-name"),
     i = document.querySelector('.hd'),
     create_or_show = document.querySelector('.create-or-show'),
@@ -976,7 +977,7 @@ function subUsName() {
         startQz.remove()
         endQz.remove()
     }
-
+    showTable.innerHTML = '';
     //reset the the li elements in Object(array)
     let lists = document.querySelectorAll('.sub-name')
     let filterLi = Array.from(lists).filter(l => l.classList.contains('active')).map(l => l.firstElementChild.firstElementChild.textContent).join("")
@@ -1020,20 +1021,11 @@ function subUsName() {
                     }
                 })
             } else {
-                if(txt.value === teamCode) {
-                    check.classList.remove('active');
-                    let table = document.querySelector('table')
-                    if(table) {
-                        table.remove();
-                    }
-                    container.innerHTML = '';
-                    container.classList.remove('start-qz')
-                    startBtn.remove()
-                    endBtn.remove()
-                    showRanking();
-                } else {
-                    txt.placeholder = 'Wrong Team Code'
-                }
+                // if(txt.value === teamCode) {
+
+                // } else {
+                //     txt.placeholder = 'Wrong Team Code'
+                // }
             }
         }
 
@@ -1045,14 +1037,34 @@ function subUsName() {
         }  
         
         check.addEventListener("submit", () => {
+            showTable.innerHTML = '';
             log_username_dyn();
         })
     })
+
+    if(userState === 'Rx-user') {
+        showTable.innerHTML = `<button type="button" class="w-75 btn btn-primary show-table">Show Table</button>`;
+        
+        showTable.firstElementChild.onclick = () => {
+            check.classList.remove('active');
+            let table = document.querySelector('table')
+            if(table) {
+                table.remove();
+            }
+            container.innerHTML = '';
+            container.classList.remove('start-qz')
+            startBtn.remove()
+            endBtn.remove()
+            showRanking();
+            showTable.innerHTML = '';
+        }
+    }
+    
     //create start btn
     let startBtn = document.createElement('button')
     startBtn.textContent = 'Start Quiz'
     startBtn.className = 'startQz hd'
-    
+
     //create stop btn
     let endBtn = document.createElement('button')
     endBtn.textContent = 'Stop Quiz'
@@ -1516,3 +1528,4 @@ function showRanking() {
 
     table.classList.remove('hd')
 };
+
