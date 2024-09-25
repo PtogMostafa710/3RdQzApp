@@ -973,10 +973,17 @@ function subUsName() {
     let nested_lists = document.querySelectorAll('.lec-name')
     let startQz = document.querySelector('.startQz')
     let endQz = document.querySelector('.stop-qz')
+
     if(startQz) {
         startQz.remove()
         endQz.remove()
     }
+
+    showTable.classList.remove('hd')
+    if(showTable) {
+    }
+
+    
     showTable.innerHTML = '';
     //reset the the li elements in Object(array)
     let lists = document.querySelectorAll('.sub-name')
@@ -1020,13 +1027,7 @@ function subUsName() {
                         })
                     }
                 })
-            } else {
-                // if(txt.value === teamCode) {
-
-                // } else {
-                //     txt.placeholder = 'Wrong Team Code'
-                // }
-            }
+            } 
         }
 
         if(localStorage.getItem('username')) {
@@ -1043,7 +1044,7 @@ function subUsName() {
     })
 
     if(userState === 'Rx-user') {
-        showTable.innerHTML = `<button type="button" class="w-75 btn btn-primary show-table">Show Table</button>`;
+        showTable.innerHTML = `<button type="button" class="btn btn-primary show-table">Show Table</button>`;
         
         showTable.firstElementChild.onclick = () => {
             check.classList.remove('active');
@@ -1085,6 +1086,10 @@ function subUsName() {
         
         container.classList.add('start-qz')
         if(container.classList.contains('start-qz')) {
+
+            showTable.classList.add('hd')
+            check.classList.remove('active')
+            
             startTime = Date.now();
             // startBtn.disabled = true;
             substancesRegister.forEach(function(sub) {
