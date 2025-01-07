@@ -1110,7 +1110,7 @@ function pageContent(content, length) {
             answerVal.className = 'answer-val';
             answerVal.textContent += `${answersObject[`answer-${i}`]}`;
             
-            answerVal.setAttribute("rt-answer", content[index][`rt-answer`].trim())
+            answerVal.setAttribute("rt-answer", content[index][`rt-answer`])
 
             answer.appendChild(circle)
             answer.appendChild(answerVal)
