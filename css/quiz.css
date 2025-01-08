@@ -657,8 +657,8 @@ section.active {
                 overflow: hidden;
                 li {
                     transform: scale(1);
-                    padding: 10px;
-                    font-size: inherit;
+                    padding: 5px;
+                    font-size: 14px;
                     transition: .5s;
                     position: relative;
                     display: flex;
