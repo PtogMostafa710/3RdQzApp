@@ -951,7 +951,7 @@ function subUsName() {
         function log_username_dyn() {
             if(txt.value.trim().split(" ").length >= 2) {
                 if(!localStorage.getItem('username')) {
-                    localStorage.setItem('username', txt.value);
+                    localStorage.setItem('username', txt.value.toLowerCase());
                 }
                 
                 startBtn.classList.remove('hd')
