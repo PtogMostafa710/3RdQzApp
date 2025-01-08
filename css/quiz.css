@@ -802,6 +802,10 @@ section.active {
     pointer-events: none;
 }
 
+.passed_sign{
+    color: var(--red-color);
+}
+
 .answers > div.false {
     border-bottom: 1px solid red;
     color: red;
