@@ -347,7 +347,7 @@ getDoc(doc(db, "substances", 'subjects')).then(e=>{
                   if (localStorage.getItem("username") == username) {
                     let passed_sign = document.createElement("span");
                     passed_sign.classList.add("passed_sign");
-                    passed_sign.textContent = "✔";
+                    passed_sign.innerHTML = "&#10004;";
                     contents.parentElement.appendChild(passed_sign);
     
                     //?todo: but i must not repeat any username in database
