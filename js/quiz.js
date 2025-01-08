@@ -971,7 +971,7 @@ function subUsName() {
         })
     })
 
-    if(userState === 'Rx-user') {
+    if(userState === 'rx-user') {
         showTable.innerHTML = `<button type="button" class="btn btn-primary show-table">Show Table</button>`;
         
         showTable.firstElementChild.onclick = () => {
