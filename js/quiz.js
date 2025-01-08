@@ -128,11 +128,9 @@ function user_register(e) {
     e.preventDefault();
     
     if(!code_check.checked) {
-        userState = 'user'
         user();
     } else {
         if(codeValidation.value == teamCode) {
-            userState = 'Rx-user'
             rx_user();
         } else {
             showAlerts('Enter Right Rx Code Or Cancel The Check Of CheckBox', 'danger')
@@ -161,14 +159,14 @@ function rx_user() {
     create_qz.style.top =  `${create_or_show_height + 30}px`
     slide_bar.style.top =  `${create_or_show_height + 1}px`
     valid.remove();
-    userState = 'Rx-user';
+    userState = 'rx-user';
 }
 
 if(localStorage.getItem('user-status')) {
     const userInfo = JSON.parse(localStorage.getItem('user-status'))
     if(userInfo.status == 'user') {
         user()
-    } else {
+    } else if(userInfo.status == "rx-user") {
         rx_user();
     }
 }
