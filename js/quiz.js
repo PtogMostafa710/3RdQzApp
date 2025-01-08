@@ -325,11 +325,36 @@ getDoc(doc(db, "substances", 'subjects')).then(e=>{
                     if(sub['subName'] === subLi_content.firstElementChild.textContent) {
                             if(k !== 'subName') {
                                 subLi_content.parentElement.lastElementChild.innerHTML +=  `
-                                <li class='lec-name'><span>${k}</span>
+                                <li class='lec-name'><span class='${k
+                                  .split(" ")
+                                  .join("")}'>${k}</span>
                                 </li>`;
                             }
                         }
                     })
+                let completed_lec = e.data()[sub["subName"]];
+
+              Object.keys(completed_lec).forEach((lec_name) => {
+                const users = completed_lec[lec_name];
+    
+                let contents = document.querySelector(
+                  `.lec-name .${lec_name.split(" ").join("")}`
+                );
+    
+                users.forEach((user) => {
+                  const username = user["usName"];
+    
+                  if (localStorage.getItem("username") == username) {
+                    let passed_sign = document.createElement("span");
+                    passed_sign.classList.add("passed_sign");
+                    passed_sign.textContent = "✔";
+                    contents.parentElement.appendChild(passed_sign);
+    
+                    //?todo: but i must not repeat any username in database
+                  }
+                });
+              });
+                
             })
 
             
