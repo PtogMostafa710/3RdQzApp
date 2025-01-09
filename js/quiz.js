@@ -288,10 +288,6 @@ submit_substance.addEventListener('click', async () => {
             // addLec()
         }   
         
-        // Reference to the document
-        // Get the current data
-        // The document exists, update it
-        // The document does not exist, create it with the initial array
         const docSnap = await getDoc(docRef);
         if(docSnap.exists()) {
             //Normal updated
