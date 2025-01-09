@@ -5,7 +5,7 @@ const firebaseConfig = {
     storageBucket: "qzapp-83196.appspot.com",
     messagingSenderId: "563040277968",
     appId: "1:563040277968:web:78c3f6c9276cd2626495d5",
-};
+}
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js";
 
