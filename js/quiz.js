@@ -71,7 +71,7 @@ let trueAnswer = 0;
 let falseAnswer = 0;
 let missedAnswer = 0;
 let set_interval, startTime, endTime;
-let duration = 10;
+let duration = 50;
 let txtArray = {};
 let substancesRegister = [];
 let sldHgh;
