@@ -335,16 +335,35 @@ getDoc(doc(db, "substances", 'subjects')).then(e=>{
                     })
                 let completed_lec = e.data()[sub["subName"]];
 
-              Object.keys(completed_lec).forEach((lec_name) => {
+            Object.keys(completed_lec).forEach(async (lec_name) => {
                 const users = completed_lec[lec_name];
     
                 let contents = document.querySelector(
                   `.lec-name .${lec_name.split(" ").join("")}`
                 );
     
-                users.forEach((user) => {
-                  const username = user["usName"];
+                const lec_length = sub[lec_name].length;
     
+                users.forEach(async (user) => {
+                  const username = user["usName"];
+                  const results = user["true-answers"];
+    
+                  userData.push({
+                    ...user,
+                    ["true-answers"]: results.split("/")[0] + "/" + lec_length,
+                  });
+                  // //update the total ques length of lecture//
+                  updated_last_result = {
+                    ...updated_last_result,
+                    [lec_name]: userData,
+                  };
+    
+                  await updateDoc(docRef, {
+                    [sub['subName']]: updated_last_result,
+                  });
+                  //update the total ques length of//
+    
+                  //put passed lecture//
                   if (localStorage.getItem("username") == username) {
                     let passed_sign = document.createElement("span");
                     passed_sign.classList.add("passed_sign");
@@ -354,6 +373,7 @@ getDoc(doc(db, "substances", 'subjects')).then(e=>{
                     //?todo: but i must not repeat any username in database
                   }
                 });
+                //put passed lecture//
               });
                 
             })
