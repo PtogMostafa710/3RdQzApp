@@ -311,7 +311,7 @@ getDoc(doc(db, "substances", 'subjects')).then(e=>{
     substancesRegister = storedData
     if(substancesRegister.length > 0) {
         substancesRegister.forEach(async function(sub, i) {
-            let updated_last_result = {};
+            let updated_last_result = {}
             let userData = [];
 
             showList()
