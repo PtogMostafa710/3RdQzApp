@@ -949,14 +949,17 @@ button.stop-qz{
 
 
 /* table */
+.table-container {
+    width: 98%;
+    max-height: 400px;
+    overflow-y: auto;
+    position: relative;
+    margin: 0 auto;
+}
 
 table {
-    width: 99%;
+    width: 100%;
     border-collapse: collapse;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
 }
 
 th, td {
@@ -984,7 +987,7 @@ tr td {
 }
 
 ::-webkit-scrollbar {
-    width: 5px;
+    width: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
