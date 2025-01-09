@@ -49,6 +49,7 @@ let container = document.querySelector(".container"),
     check = document.querySelector(".check"),
     controlled_btn = document.querySelector(".controller-buttons"),
     showTable = document.querySelector(".showTable"),
+    table_container = document.querySelector(".table-container"),
     txt = document.querySelector(".check-us-name"),
     i = document.querySelector('.hd'),
     create_or_show = document.querySelector('.create-or-show'),
@@ -1482,7 +1483,7 @@ function showRanking() {
     }
     table.appendChild(tBody)
     
-    qzShow.appendChild(table)
+    table_container.appendChild(table)
 
     table.classList.remove('hd')
 };
