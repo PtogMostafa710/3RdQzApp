@@ -69,7 +69,6 @@ let defaultSUbtMessage = "No Subjects Added";
 let currentIndex = 0;
 let trueAnswer = 0;
 let falseAnswer = 0;
-let missedAnswer = 0;
 let set_interval, startTime, endTime;
 let duration = 50;
 let txtArray = {};
@@ -78,8 +77,6 @@ let sldHgh;
 let teamCode = "2027";
 let storedData;
 let userState = "";
-let userEmails = [];
-let storedUsers;
 
 let create_or_show_height = create_or_show.getBoundingClientRect().height;
 create_qz.style.top = `${create_or_show_height + 30}px`;
@@ -101,76 +98,6 @@ function validateEmail(email) {
   const regex = /^[^\s@]+@(gmail|Gmail|yahho)\.com$/;
   return regex.test(email);
 }
-
-// let emailFound = false
-// // for payed process
-
-// // const docRefUsers = doc(db, "userRegister", "usersEmails");
-// // register.addEventListener('click', async function() {
-
-// //     register.innerHTML = loadingAction()
-// //     if (validateEmail(reEmail.value)) {
-// //         const docSnap = await getDoc(docRefUsers);
-// //         if(docSnap.exists()) {
-// //             //Normal updated
-// //             getDoc(docRefUsers).then(async e=>{
-// //                 storedUsers = await e.data().users
-// //                 storedUsers.push({})
-
-// //                 storedUsers.forEach(async function(storeObject) {
-// //                     if(storeObject.userEmail === reEmail.value) {
-// //                         emailFound = true
-
-// //                         if(storeObject.subscribed) {
-// //                             resultOfAuth()
-// //                         }
-
-// //                         return await updateDoc(docRefUsers, {
-// //                             users: arrayUnion({...storeObject, subscribed: storeObject.subscribed})
-// //                         })
-// //                     }
-
-// //                     if(!emailFound) {
-// //                         return await updateDoc(docRefUsers, {
-// //                             users: arrayUnion({userEmail: reEmail.value, subscribed: codeValidation.value === teamCode ? true : false, status: codeValidation.value === teamCode ? 'Rx-User' : "User"})
-// //                         })
-// //                     }
-// //                     localStorage.setItem('subscribed-user-email', JSON.stringify(storedUsers))
-// //                 })
-// //             })
-// //         }
-// //     } else {
-// //         showAlerts('Invalid Email', 'danger');
-// //     }
-
-// //     closeModal.click();
-// //     register.innerHTML = 'Register'
-
-// // })
-
-// // function resultOfAuth() {
-
-// //     log_register.remove();
-
-// //     if(codeValidation.value == teamCode) {
-// //         create_or_show.style.display = 'none'
-// //         slide_bar.parentElement.style.display = 'flex'
-// //         slide_bar.style.top = '1px';
-// //         i.style.top = '1px'
-
-// //
-// //     } else {
-// //         create_or_show.style.display = 'none'
-// //         qzShow.style.display = 'block'
-
-// //         i.parentElement.style.top =  `2%`
-// //         slide_bar.style.top =  `1px`
-// //     }
-// // }
-
-// // if(localStorage.getItem('subscribed-user-email')) {
-// //     resultOfAuth()
-// // }
 
 reEmail.addEventListener("input", function (event) {
   if (event.data !== " ") {
@@ -374,6 +301,17 @@ submit_substance.addEventListener("click", async () => {
   register_substances.value = "";
 });
 
+function removeParentheses(string) {
+  let filtered_string = string
+    .split("")
+    .filter((s) => {
+      return s !== "(" && s !== ")";
+    })
+    .join("");
+
+  return filtered_string;
+}
+
 // Register Substances
 getDoc(doc(db, "substances", "subjects"))
   .then(async (e) => {
@@ -384,7 +322,6 @@ getDoc(doc(db, "substances", "subjects"))
     if (substancesRegister.length && substancesRegister.length > 0) {
       substancesRegister.forEach(async function (sub, i) {
         let updated_last_result = {};
-        let userData = [];
 
         showList();
         let subLi_contents = document.querySelectorAll(
@@ -402,58 +339,70 @@ getDoc(doc(db, "substances", "subjects"))
             ) {
               if (k !== "subName") {
                 subLi_content.parentElement.lastElementChild.innerHTML += `
-                                <li class='lec-name'><span class='${k
-                                  .split(" ")
-                                  .join("")}'>${k}</span>
+                                <li class='lec-name'><span class='${sub[
+                                  "subName"
+                                ].toLowerCase()}-${removeParentheses(k)
+                  .split(" ")
+                  .join("")}'>${k}</span>
                                 </li>`;
               }
             }
           });
+        });
 
-          let completed_lec = e.data()[sub["subName"]]
-            ? e.data()[sub["subName"]]
-            : {};
+        let completed_lec = e.data()[sub["subName"]]
+          ? e.data()[sub["subName"]]
+          : {};
 
-          Object.keys(completed_lec).forEach(async (lec_name) => {
-            const users = completed_lec[lec_name];
+        Object.keys(completed_lec).forEach(async (lec_name) => {
+          const users = completed_lec[lec_name];
 
-            let contents = document.querySelector(
-              `.lec-name .${lec_name.split(" ").join("")}`
-            );
+          // ? best practice to get function to get element immediately to make the code more readable
+          let contents = document.querySelector(
+            `.lec-name .${sub["subName"].toLowerCase()}-${removeParentheses(
+              lec_name
+            )
+              .split(" ")
+              .join("")}`
+          );
+
+          // each cycle of loop (get users that passed one substance) so the userData must be empty after each cycle of completed_lec 
+          let userData = [];
+
+          users.forEach(async (user) => {
+            const username = user["usName"];
+            const results = user["true-answers"];
 
             const lec_length = sub[lec_name].length;
+            const total_result = results.split("/")[0] + "/" + lec_length;
 
-            users.forEach(async (user) => {
-              const username = user["usName"];
-              const results = user["true-answers"];
-
-              userData.push({
-                ...user,
-                ["true-answers"]: results.split("/")[0] + "/" + lec_length,
-              });
-              // //update the total ques length of lecture//
-              updated_last_result = {
-                ...updated_last_result,
-                [lec_name]: userData,
-              };
-
-              await updateDoc(docRef, {
-                [sub["subName"]]: updated_last_result,
-              });
-              //update the total ques length of//
-
-              //put passed lecture//
-              if (localStorage.getItem("username") == username) {
-                let passed_sign = document.createElement("span");
-                passed_sign.classList.add("passed_sign");
-                passed_sign.innerHTML = "&#10004;";
-                contents.parentElement.appendChild(passed_sign);
-
-                //?todo: but i must not repeat any username in database
-              }
+            userData.push({
+              ...user,
+              ["true-answers"]: total_result,
             });
+
+            //update the total ques length of//
+            updated_last_result = {
+              ...updated_last_result,
+              [lec_name]: userData,
+            };
+
+            await updateDoc(docRef, {
+              [sub["subName"]]: updated_last_result,
+            });
+            //update the total ques length of//
+
             //put passed lecture//
+            if (localStorage.getItem("username") == username) {
+              let passed_sign = document.createElement("span");
+              passed_sign.classList.add("passed_sign");
+              passed_sign.innerHTML = "&#10004;";
+              contents.parentElement.appendChild(passed_sign);
+
+              //?todo: but i must not repeat any username in database
+            }
           });
+          //put passed lecture//
         });
 
         //deploy select-sub ul and li
@@ -1188,8 +1137,6 @@ function subUsName() {
     currentIndex = 0;
     trueAnswer = 0;
     falseAnswer = 0;
-    missedAnswer = 0;
-
     // Capture the start time
 
     container.classList.add("start-qz");
@@ -1238,9 +1185,6 @@ function pageContent(content, length) {
 
     container.children[0].style.display = "block";
     setTimeout(() => container.children[0].classList.add("active"), 10);
-
-    // quizApp.style.display = 'block'
-    // setTimeout(() => quizApp.classList.add("active"),2)
 
     let category = document.createElement("div");
     category.className = "category";
@@ -1492,8 +1436,6 @@ function dwn(sc, seconds, mt, minutes) {
 
 // //selected answer
 function checkAnswers(a) {
-  // let true_false_answer = document.createElement("span")
-  // let clonedSign = true_false_answer.cloneNode(true)
   let true_false_answer = document.createElement("span");
   let clonedSign = true_false_answer.cloneNode(true);
 
