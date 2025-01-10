@@ -70,7 +70,7 @@ let currentIndex = 0;
 let trueAnswer = 0;
 let falseAnswer = 0;
 let set_interval, startTime, endTime;
-let duration = 10;
+let duration = 50;
 let txtArray = {};
 let substancesRegister = [];
 let sldHgh;
@@ -98,76 +98,6 @@ function validateEmail(email) {
   const regex = /^[^\s@]+@(gmail|Gmail|yahho)\.com$/;
   return regex.test(email);
 }
-
-// let emailFound = false
-// // for payed process
-
-// // const docRefUsers = doc(db, "userRegister", "usersEmails");
-// // register.addEventListener('click', async function() {
-
-// //     register.innerHTML = loadingAction()
-// //     if (validateEmail(reEmail.value)) {
-// //         const docSnap = await getDoc(docRefUsers);
-// //         if(docSnap.exists()) {
-// //             //Normal updated
-// //             getDoc(docRefUsers).then(async e=>{
-// //                 storedUsers = await e.data().users
-// //                 storedUsers.push({})
-
-// //                 storedUsers.forEach(async function(storeObject) {
-// //                     if(storeObject.userEmail === reEmail.value) {
-// //                         emailFound = true
-
-// //                         if(storeObject.subscribed) {
-// //                             resultOfAuth()
-// //                         }
-
-// //                         return await updateDoc(docRefUsers, {
-// //                             users: arrayUnion({...storeObject, subscribed: storeObject.subscribed})
-// //                         })
-// //                     }
-
-// //                     if(!emailFound) {
-// //                         return await updateDoc(docRefUsers, {
-// //                             users: arrayUnion({userEmail: reEmail.value, subscribed: codeValidation.value === teamCode ? true : false, status: codeValidation.value === teamCode ? 'Rx-User' : "User"})
-// //                         })
-// //                     }
-// //                     localStorage.setItem('subscribed-user-email', JSON.stringify(storedUsers))
-// //                 })
-// //             })
-// //         }
-// //     } else {
-// //         showAlerts('Invalid Email', 'danger');
-// //     }
-
-// //     closeModal.click();
-// //     register.innerHTML = 'Register'
-
-// // })
-
-// // function resultOfAuth() {
-
-// //     log_register.remove();
-
-// //     if(codeValidation.value == teamCode) {
-// //         create_or_show.style.display = 'none'
-// //         slide_bar.parentElement.style.display = 'flex'
-// //         slide_bar.style.top = '1px';
-// //         i.style.top = '1px'
-
-// //
-// //     } else {
-// //         create_or_show.style.display = 'none'
-// //         qzShow.style.display = 'block'
-
-// //         i.parentElement.style.top =  `2%`
-// //         slide_bar.style.top =  `1px`
-// //     }
-// // }
-
-// // if(localStorage.getItem('subscribed-user-email')) {
-// //     resultOfAuth()
-// // }
 
 reEmail.addEventListener("input", function (event) {
   if (event.data !== " ") {
@@ -437,6 +367,10 @@ getDoc(doc(db, "substances", "subjects"))
                     const lec_length = sub[lec_name].length;
 
                     if (results && results.split("/")[1] !== lec_length) {
+                      if (results.split("/")[1] === results.split("/")[0]) {
+                        results.split("/")[0] = lec_length;
+                      }
+
                       const total_result =
                         results.split("/")[0] + "/" + lec_length;
 
