@@ -70,7 +70,7 @@ let currentIndex = 0;
 let trueAnswer = 0;
 let falseAnswer = 0;
 let set_interval, startTime, endTime;
-let duration = 50;
+let duration = 10;
 let txtArray = {};
 let substancesRegister = [];
 let sldHgh;
@@ -98,6 +98,76 @@ function validateEmail(email) {
   const regex = /^[^\s@]+@(gmail|Gmail|yahho)\.com$/;
   return regex.test(email);
 }
+
+// let emailFound = false
+// // for payed process
+
+// // const docRefUsers = doc(db, "userRegister", "usersEmails");
+// // register.addEventListener('click', async function() {
+
+// //     register.innerHTML = loadingAction()
+// //     if (validateEmail(reEmail.value)) {
+// //         const docSnap = await getDoc(docRefUsers);
+// //         if(docSnap.exists()) {
+// //             //Normal updated
+// //             getDoc(docRefUsers).then(async e=>{
+// //                 storedUsers = await e.data().users
+// //                 storedUsers.push({})
+
+// //                 storedUsers.forEach(async function(storeObject) {
+// //                     if(storeObject.userEmail === reEmail.value) {
+// //                         emailFound = true
+
+// //                         if(storeObject.subscribed) {
+// //                             resultOfAuth()
+// //                         }
+
+// //                         return await updateDoc(docRefUsers, {
+// //                             users: arrayUnion({...storeObject, subscribed: storeObject.subscribed})
+// //                         })
+// //                     }
+
+// //                     if(!emailFound) {
+// //                         return await updateDoc(docRefUsers, {
+// //                             users: arrayUnion({userEmail: reEmail.value, subscribed: codeValidation.value === teamCode ? true : false, status: codeValidation.value === teamCode ? 'Rx-User' : "User"})
+// //                         })
+// //                     }
+// //                     localStorage.setItem('subscribed-user-email', JSON.stringify(storedUsers))
+// //                 })
+// //             })
+// //         }
+// //     } else {
+// //         showAlerts('Invalid Email', 'danger');
+// //     }
+
+// //     closeModal.click();
+// //     register.innerHTML = 'Register'
+
+// // })
+
+// // function resultOfAuth() {
+
+// //     log_register.remove();
+
+// //     if(codeValidation.value == teamCode) {
+// //         create_or_show.style.display = 'none'
+// //         slide_bar.parentElement.style.display = 'flex'
+// //         slide_bar.style.top = '1px';
+// //         i.style.top = '1px'
+
+// //
+// //     } else {
+// //         create_or_show.style.display = 'none'
+// //         qzShow.style.display = 'block'
+
+// //         i.parentElement.style.top =  `2%`
+// //         slide_bar.style.top =  `1px`
+// //     }
+// // }
+
+// // if(localStorage.getItem('subscribed-user-email')) {
+// //     resultOfAuth()
+// // }
 
 reEmail.addEventListener("input", function (event) {
   if (event.data !== " ") {
@@ -328,12 +398,12 @@ getDoc(doc(db, "substances", "subjects"))
           ".sub-name .content-parent"
         );
 
-        subLi_contents.forEach((subLi_content, index) => {
+        subLi_contents.forEach(async (subLi_content, index) => {
           if (index === i) {
             subLi_content.firstElementChild.textContent = sub["subName"];
           }
 
-          Object.keys(sub).forEach(async (k) => {
+          Object.keys(sub).forEach((k) => {
             if (
               sub["subName"] === subLi_content.firstElementChild.textContent
             ) {
@@ -345,65 +415,114 @@ getDoc(doc(db, "substances", "subjects"))
                   .split(" ")
                   .join("")}'>${k}</span>
                                 </li>`;
+
+                let lec_name = k;
+
+                const users = e.data()[sub["subName"]]?.[lec_name] ?? [];
+
+                let contents = document.querySelector(
+                  `.lec-name .${sub[
+                    "subName"
+                  ].toLowerCase()}-${removeParentheses(lec_name)
+                    .split(" ")
+                    .join("")}`
+                );
+
+                let userData = [];
+                if (users.length > 0) {
+                  users.forEach((user) => {
+                    const username = user["usName"];
+                    const results = user["true-answers"] ?? false;
+
+                    const lec_length = sub[lec_name].length;
+
+                    if (results && results.split("/")[1] !== lec_length) {
+                      const total_result =
+                        results.split("/")[0] + "/" + lec_length;
+
+                      userData.push({
+                        ...user,
+                        ["true-answers"]: total_result,
+                      });
+
+                      //update the total ques length of//
+                      updated_last_result = {
+                        ...updated_last_result,
+                        [lec_name]: userData,
+                      };
+                    }
+
+                    //put passed lecture//
+                    if (localStorage.getItem("username") == username) {
+                      let passed_sign = document.createElement("span");
+                      passed_sign.classList.add("passed_sign");
+                      passed_sign.innerHTML = "&#10004;";
+                      contents.parentElement.appendChild(passed_sign);
+
+                      //?todo: but i must not repeat any username in database
+                    }
+                  });
+                }
               }
             }
           });
-        });
 
-        let completed_lec = e.data()[sub["subName"]]
-          ? e.data()[sub["subName"]]
-          : {};
-
-        Object.keys(completed_lec).forEach(async (lec_name) => {
-          const users = completed_lec[lec_name];
-
-          // ? best practice to get function to get element immediately to make the code more readable
-          let contents = document.querySelector(
-            `.lec-name .${sub["subName"].toLowerCase()}-${removeParentheses(
-              lec_name
-            )
-              .split(" ")
-              .join("")}`
-          );
-
-          // each cycle of loop (get users that passed one substance) so the userData must be empty after each cycle of completed_lec 
-          let userData = [];
-
-          users.forEach(async (user) => {
-            const username = user["usName"];
-            const results = user["true-answers"];
-
-            const lec_length = sub[lec_name].length;
-            const total_result = results.split("/")[0] + "/" + lec_length;
-
-            userData.push({
-              ...user,
-              ["true-answers"]: total_result,
-            });
-
-            //update the total ques length of//
-            updated_last_result = {
-              ...updated_last_result,
-              [lec_name]: userData,
-            };
-
-            await updateDoc(docRef, {
-              [sub["subName"]]: updated_last_result,
-            });
-            //update the total ques length of//
-
-            //put passed lecture//
-            if (localStorage.getItem("username") == username) {
-              let passed_sign = document.createElement("span");
-              passed_sign.classList.add("passed_sign");
-              passed_sign.innerHTML = "&#10004;";
-              contents.parentElement.appendChild(passed_sign);
-
-              //?todo: but i must not repeat any username in database
-            }
+          await updateDoc(docRef, {
+            [sub["subName"]]: updated_last_result,
           });
-          //put passed lecture//
+          //update the total ques length of//
         });
+
+        // Object.keys(completed_lec).forEach(async (lec_name) => {
+        //   const users = completed_lec[lec_name];
+
+        //   // ? best practice to get function to get element immediately to make the code more readable
+        //   let contents = document.querySelector(
+        //     `.lec-name .${sub["subName"].toLowerCase()}-${removeParentheses(
+        //       lec_name
+        //     )
+        //       .split(" ")
+        //       .join("")}`
+        //   );
+
+        //   // each cycle of loop (get users that passed one substance) so the userData must be empty after each cycle of completed_lec
+        //   let userData = [];
+
+        //   users.forEach(async (user) => {
+        //     const username = user["usName"];
+        //     const results = user["true-answers"];
+
+        //     const lec_length = sub[lec_name].length;
+        //     const total_result = results.split("/")[0] + "/" + lec_length;
+
+        //     userData.push({
+        //       ...user,
+        //       ["true-answers"]: total_result,
+        //     });
+
+        //     //update the total ques length of//
+        //     updated_last_result = {
+        //       ...updated_last_result,
+        //       [lec_name]: userData,
+        //     };
+
+        //     // await updateDoc(docRef, {
+        //     //   [sub["subName"]]: updated_last_result,
+        //     // });
+        //     //update the total ques length of//
+
+        //     //put passed lecture//
+        //     if (localStorage.getItem("username") == username) {
+        //       let passed_sign = document.createElement("span");
+        //       passed_sign.classList.add("passed_sign");
+        //       passed_sign.innerHTML = "&#10004;";
+        //       contents.parentElement.appendChild(passed_sign);
+
+        //       //?todo: but i must not repeat any username in database
+        //     }
+        //   });
+        //   //put passed lecture//
+        // });
 
         //deploy select-sub ul and li
         let li = document.createElement("li");
